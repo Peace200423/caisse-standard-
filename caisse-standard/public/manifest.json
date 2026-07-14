@@ -1,0 +1,9 @@
+{
+  "name": "Caisse Standard",
+  "short_name": "Caisse",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "background_color": "#F5F3ED",
+  "theme_color": "#12241D",
+  "icons": []
+}
