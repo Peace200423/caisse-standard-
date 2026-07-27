@@ -1,0 +1,71 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Organization {
+  id                 String   @id @default(cuid())
+  name               String
+  slug               String   @unique
+  publicShareToken   String?  @unique
+  publicShareEnabled Boolean  @default(false)
+  createdAt          DateTime @default(now())
+  members            Member[]
+  objectifs          Objectif[]
+}
+
+model Member {
+  id                String       @id @default(cuid())
+  nom               String
+  email             String       @unique
+  role              String       @default("agent") // "admin" | "superviseur" | "agent"
+  codeHash          String
+  resetToken        String?
+  resetTokenExpiry  DateTime?
+  organizationId    String
+  organization      Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  createdAt         DateTime     @default(now())
+}
+
+model Objectif {
+  id             String       @id @default(cuid())
+  titre          String
+  niveau         String       @default("EXTRANT") // IMPACT | EFFET | EXTRANT | ACTIVITE
+  parentId       String?
+  parent         Objectif?    @relation("Hierarchie", fields: [parentId], references: [id], onDelete: SetNull)
+  enfants        Objectif[]   @relation("Hierarchie")
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  indicateurs    Indicateur[]
+  createdAt      DateTime     @default(now())
+}
+
+model Indicateur {
+  id         String          @id @default(cuid())
+  nom        String
+  cible      Float
+  unite      String?
+  odd        Int[]           @default([])
+  objectifId String
+  objectif   Objectif        @relation(fields: [objectifId], references: [id], onDelete: Cascade)
+  valeurs    ValeurRelevee[]
+  createdAt  DateTime        @default(now())
+}
+
+model ValeurRelevee {
+  id           String     @id @default(cuid())
+  valeur       Float
+  date         DateTime
+  note         String?
+  preuveUrl    String?
+  statut       String     @default("valide") // "en_attente" | "valide" | "rejete"
+  soumisPar    String     @default("admin")  // "agent" | "admin" | "superviseur"
+  indicateurId String
+  indicateur   Indicateur @relation(fields: [indicateurId], references: [id], onDelete: Cascade)
+  createdAt    DateTime   @default(now())
+}
