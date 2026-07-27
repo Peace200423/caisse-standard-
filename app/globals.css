@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background-color: #16231C;
+  background-image:
+    radial-gradient(600px circle at 8% 5%, rgba(79, 161, 132, 0.20), transparent 60%),
+    radial-gradient(500px circle at 95% 15%, rgba(214, 154, 69, 0.14), transparent 55%),
+    radial-gradient(700px circle at 50% 95%, rgba(79, 161, 132, 0.10), transparent 60%);
+  background-attachment: fixed;
+  color: #ECE7D9;
+  min-height: 100vh;
+}
+
+/* Effet verre dépoli appliqué globalement à tous les panneaux/cartes (utilitaire bg-panel) */
+.bg-panel {
+  background-color: rgba(30, 46, 36, 0.5) !important;
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.gauge-ticks {
+  background-image: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent calc(10% - 1px),
+    rgba(22, 35, 28, 0.55) 10%
+  );
+}
